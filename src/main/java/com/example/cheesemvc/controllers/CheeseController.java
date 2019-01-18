@@ -1,5 +1,6 @@
 package com.example.cheesemvc.controllers;
 
+import com.example.cheesemvc.models.Cheese;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 @RequestMapping(value="cheese")
 public class CheeseController {
 
-    static HashMap<String, String> cheeses = new HashMap<>();
+    static ArrayList<Cheese> cheeses = new ArrayList<>();
 
     @RequestMapping(value="")
     public String index(Model model) {
@@ -31,7 +32,7 @@ public class CheeseController {
 
     @RequestMapping(value="add", method=RequestMethod.POST)
     public String processAddCheeseForm(@RequestParam String cheeseName, String cheeseDescription) {
-        cheeses.put(cheeseName, cheeseDescription);
+        cheeses.add(new Cheese(cheeseName, cheeseDescription));
         return "redirect:";
     }
 
@@ -44,8 +45,8 @@ public class CheeseController {
 
     @RequestMapping(value="remove", method=RequestMethod.POST)
     public String processRemoveCheeseForm(@RequestParam ArrayList<String> cheeseNames) {
-        for (String cheese : cheeseNames) {
-            cheeses.remove(cheese);
+        for (String cheeseName : cheeseNames) {
+            cheeses.removeIf(cheese -> cheese.getName().equals(cheeseName));
         }
         return "redirect:";
     }
